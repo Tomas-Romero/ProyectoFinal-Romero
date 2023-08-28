@@ -1,0 +1,10 @@
+:root {
+    --color-primary: #00ff00;
+}
+  h1{
+    font-size: 40px;
+    color: var(--color-primary);
+}
+span{
+    color: var(--color-primary);
+}
