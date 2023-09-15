@@ -1,17 +1,143 @@
-/* Error: Can't find stylesheet to import.
- *   ,
- * 1 | @import 'variables';
- *   |         ^^^^^^^^^^^
- *   '
- *   scss\styles.scss 1:9  root stylesheet */
-
-body::before {
-  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
-      "Droid Sans Mono", monospace, monospace;
-  white-space: pre;
-  display: block;
-  padding: 1em;
-  margin-bottom: 1em;
-  border-bottom: 2px solid black;
-  content: "Error: Can't find stylesheet to import.\a   \2577 \a 1 \2502  @import 'variables';\d\a   \2502          ^^^^^^^^^^^\a   \2575 \a   scss\\styles.scss 1:9  root stylesheet";
+:root {
+  --color-primary: #00B500;
+  --color-contrast: #00FF00;
+  --color-strong-contrast: #005500;
+  --color-black: #000000;
+  --color-gray: #222222;
+  --color-yellow: #FF9C07;
+  --color-white: #ffffff;
 }
+
+* {
+  padding: 0px;
+  margin: 0px;
+  font-family: "Titillium Web", sans-serif;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 60px 400px auto auto;
+  grid-template-areas: "nav" "header" "main" "footer";
+  height: 100vh;
+}
+
+nav {
+  grid-area: nav;
+}
+
+header {
+  grid-area: header;
+}
+
+main {
+  grid-area: main;
+}
+
+footer {
+  grid-area: footer;
+}
+
+.marginpadding0 {
+  margin: 0px;
+  padding: 0px;
+}
+
+.flexed_wrap {
+  flex-wrap: wrap;
+}
+
+.font_bold {
+  font-weight: 700;
+}
+
+.black_designed_background {
+  background-image: url(../images/background/black_designed_background.png);
+  background-size: cover;
+  background-repeat: repeat;
+}
+
+.flexed {
+  display: flex;
+}
+
+.content_justify_space_around {
+  justify-content: space-around;
+}
+
+.content_justify_center {
+  justify-content: center;
+}
+
+.content_align_center {
+  align-content: center;
+}
+
+.items_align_center {
+  align-items: center;
+}
+
+.centered_text {
+  text-align: center;
+}
+
+.white_text {
+  color: var(--color-white);
+}
+
+.green_text {
+  color: var(--color-primary);
+}
+
+.black_background {
+  background-color: var(--color-black);
+}
+
+.green_bordered {
+  border: 1px solid var(--color-contrast);
+}
+
+.bottom_bordered {
+  border-bottom: 3px solid var(--color-contrast);
+}
+
+span {
+  color: var(--color-primary);
+}
+
+nav a img {
+  width: 60px;
+}
+
+header {
+  padding: 10px;
+}
+header .header_div_text {
+  width: 60%;
+}
+header .header_div_text h1 {
+  font-size: 5vw;
+}
+header .header_div_text p {
+  font-size: 3vw;
+}
+header img {
+  width: 30%;
+}
+
+.home_store_tittle {
+  padding: 40px 0;
+}
+
+.home_section_information div {
+  width: 20%;
+  padding: 10px;
+}
+.home_section_brands {
+  padding: 20px;
+}
+.home_section_brands img {
+  width: 100px;
+}
+
+/*# sourceMappingURL=styles.css.map */

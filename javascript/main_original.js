@@ -807,6 +807,69 @@ const categoriesStore = [
 const subcategoriesStore = [
     "Intel", "Amd", "Nvidia Graphics Cards", "Amd Graphics Cards", "DDR4 RAM", "DDR3 RAM", "SSDs", "HDDs", "Intel Motherboards", "AMD Motherboards", "Gaming Monitors", "Professionals Monitors", "Keyboards", "Mouse", "Headsets", "Cables", "Mouse Pads", "Chairs", "Coolers", "Power Supplies", "Others"
 ]
+//Initial menu text
+const menuOptionsText = "Welcome to Uranium Hardware\nEnter the your option to"
+//State for the loop of the menu
+let finishedClient = "False"
+//Function to show the categories of the products and enter a category option
+function ShowCategories(){
+    let shownText = ""
+    let categoryOption = ""
+    let i = 1
+    categoriesStore.forEach( (category)=> {
+        shownText += `${i}- ${category}\n`;
+        i += 1
+    })
+    categoryOption = prompt(`Categories of Products\nEnter the category number to show the related products.\n${shownText}`)
+    try {
+        let categoryIntroducedOption = parseInt(categoryOption) //Try to parse the introduced value
+        if((categoryIntroducedOption >= 1) && (categoryIntroducedOption <= (categoriesStore.length))){ //Filter that the option is possible for the category array lenght
+            return(categoriesStore[categoryIntroducedOption - 1]) //Return the category name based on their index
+        }else{
+            alert("The introduced option is not an available option.");
+            ShowCategories()
+        }
+    } catch (error){
+        alert("The introduced option is not an available option.");
+        ShowCategories()
+    }
+}
+//Function to show the product of the entered category
+function ShowProducts(category){
+    let productsCategory = products.filter( (element) => element.productCategory.includes(category));
+    let productsSubcategory = new Set(productsCategory.map(element => element.productSubcategories));
+    let shownText = ""
+    let i = 0
+    productsSubcategory.forEach( (subcategory)=>{
+        let shownTextproducts = ""
+        productsCategory.forEach( (element)=>{
+            if (element.productSubcategories == subcategory){
+                i += 1; 
+                shownTextproducts += `${i}- [ ${element.productName}        $${element.price} ]\n      [" ${element.description} "]\n\n`
+            }   
+        })
+        shownText += `||  ${subcategory}  ||\n\n${shownTextproducts}`
+    })
+    console.log(shownText)
+    let option = prompt(`${shownText}\nEnter the number of the product to add.\nEnter "0" to go back:`)
+    try {
+        let productIntroducedOption = parseInt(option) //Try to parse the introduced value
+        if((productIntroducedOption >= 1) && (productIntroducedOption <= (productsCategory.length))){ //Filter that the option is possible for the product array lenght
+            shoppingCart.addToCart(productsCategory[productIntroducedOption - 1])
+            alert(`The product "${productsCategory[productIntroducedOption - 1].productName}" was added to the shopping cart successfully`)        
+        }else if (productIntroducedOption == 0){
+        }else{
+            alert("The introduced option is not an available option.");
+        }
+    } catch (error){
+        alert("The introduced option is not an available option.");
+    }
+    // if (option <= (productsCategory.length + 1) && option >= 1){
+    //     shoppingCart.addToCart(productsCategory[option])
+    //     alert(`The product "${productsCategory[option].productName}" was added to the shopping cart successfully`)
+    // }else if (option == 0 || option == "back"){
+    //     showMenuOptions()
+}
 class ShoppingCart {
     constructor() {
         this.productsCart = [];
@@ -827,79 +890,58 @@ class ShoppingCart {
         shoppingCartMenu += `| Total price =  $${totalPriceCalculation} |`
         return shoppingCartMenu
     }
-}
-let shoppingCart = new ShoppingCart()
-let filtersContainer = document.getElementById("home_section_filter")
-filtersContainer.innerHTML += ""
-categoriesStore.forEach(category => {
-    filtersContainer.innerHTML += `<div class="form-check white_text"><label class="form-check-label" for="filter_applied_${category}"><input type="checkbox" class="form-check-input filter_category id="filter-applied-${category}" value="${category}">${category}</label></div>`
-});
-const checkboxFilters = document.querySelectorAll("#home_section_filter .filter_category")
-checkboxFilters.forEach(checkbox => {
-    checkbox.addEventListener('change', filterProducts);
-});
-function filterProducts() {
-    const productsFilter = products;
-    const selectedFilters = obtainSelectedFilters();
-    const filteredProducts = productsFilter.filter(product => {
-        return selectedFilters.every(filter => product.productCategory.includes(filter));
-    });
-    showProducts(filteredProducts);
-}
-function obtainSelectedFilters() {
-    const filters = [];
-    checkboxFilters.forEach(checkbox => {
-        if (checkbox.checked) {
-            filters.push(checkbox.id);
-        }
-    });
-    return filters;
-}
-function showProducts(filteredProducts) {
-    const productsContainer = document.getElementById("home_section_products")
-    productsContainer.innerHTML = ""
-    if (filteredProducts.length > 0){
-        filteredProducts.forEach(element => {
-            const elementProduct = createElementProduct(element)
-            productsContainer.appendChild(elementProduct)
-        });
-    }else{
-        const message = document.createElement('p');
-        message.textContent = 'No hay productos que coincidan con los filtros seleccionados.';
-        productsContainer.appendChild(message);
+    calculateTotal(){
+        let totalPriceCalculation = 0
+        let showCart = this.productsCart.forEach( (element) =>{
+            totalPriceCalculation += element.price
+        })
+        return Math.round(totalPriceCalculation)
+    }
+    applyCupon(){
+        let cupon = prompt("Do you have a discount coupon? Apply your discount coupon, if you don't have enter '0'")
+        let totalPrice = shoppingCart.calculateTotal()
+        while (cupon != "cupon" || cupon != 0)
+            if (cupon == "cupon"){
+                totalPrice = totalPrice * 0.8
+                alert(`The purchase of the products has been successful for $${totalPrice}`)
+                finishedClient = "True"
+                break
+            }else if (cupon == 0){
+                alert(`The purchase of the products has been successful for $${totalPrice}`)
+                finishedClient = "True"
+                break
+            }else{
+                alert("That isn't a available cupon")
+                cupon = prompt("Do you have a discount coupon? Apply your discount coupon, if you don't have enter '0'")
+
+            }    
     }
 }
-function createElementProduct(product) {
-    // Crea un elemento HTML para mostrar un producto, puedes personalizar esto
-    const elementProduct = document.createElement('div');
-    elementProduct.classList.add('shownProduct');
-    elementProduct.innerHTML = `
-        <h2>${product.productName}</h2>
-        <p>${producto.precio}</p>
-        <button class="add_to_cart">BUY</button>
-    `;
-    return elementProduct;
+let shoppingCart = new ShoppingCart()
+const options = "Enter the numbered option to continue:\n1. Show the products of the store\n2. Show the information of the store\n3. Show your shopping cart\n4. Close the menu"
+//Function for the menu loop and uses of the functions
+function showMenuOptions(){
+    optionsMenu = parseInt(prompt(options))
+    if (optionsMenu == 1){
+        let selectedCategory = ShowCategories()
+        ShowProducts(selectedCategory)
+    }else if (optionsMenu == 2){
+        alert(" ||  Schedules  ||\nMonday/Friday: 12:00 - 23:00 \nSaturday/Sunday: 19:00 - 23:00\n  ||  Location  ||\nAv. Urquiza 314 - San Rafael, Mendoza, Argentina")
+    }else if(optionsMenu == 3){
+        if ((shoppingCart.productsCart).length >= 1){
+            let continueBuying = prompt(`${shoppingCart.textMenuCart()}\n\nEnter "1" to buy the cart or any else to go back.`)
+            if (continueBuying == 1){
+                shoppingCart.applyCupon()}
+        }else{
+            alert("Your shopping cart is empty")
+        }
+    }else if(optionsMenu == 4){
+        finishedClient = "True"
+    }else{
+        alert("The introduced option is not an available option")
+    }
 }
-const buttonsBuyProducts = document.querySelectorAll('.add_to_cart');
-buttonsBuyProducts.forEach(button => {
-    button.addEventListener('click', () => {
-        const product_button = obtainProductButton(button);
-        shoppingCart.productsCart.addToCart(product_button);
-        updateCartNumber(shoppingCart.productsCart.length);
-    });
-});
-function obtainProductButton(button){
-    const productId = button.getAttribute("productName")
-    products.forEach(element => {
-        
-    })
-}
-function updateCartNumber(number){
-
-}
-// filtersContainer.innerHTML += `<div class="black_designed_background font_bold white_text green_bordered">
-// <h3 class="text-center">Subcategories</h3>
-// </div>`
-// subcategoriesStore.forEach(subcategory => {
-//     filtersContainer.innerHTML += `<div class="form-check white_text"><label class="form-check-label"><input type="checkbox" class="form-check-input" value="${subcategory}">${subcategory}</label></div>`
-// });
+// while (finishedClient == "False"){
+//     showMenuOptions();
+// }
+// alert("All the process was successful")
