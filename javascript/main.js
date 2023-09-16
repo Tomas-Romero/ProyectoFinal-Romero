@@ -543,7 +543,7 @@ const listProducts = [
     {
         productCategory: "Accessories",
         productSubcategories: "Cables",
-        productName: "Anker PowerLine+ USB-C to USB-A Cable",
+        productName: "Anker PowerLine+ USB-C",
         price: 12.99,
         description: "Durable USB-C cable for fast charging and data transfer.",
     },
@@ -557,7 +557,7 @@ const listProducts = [
     {
         productCategory: "Accessories",
         productSubcategories: "Cables",
-        productName: "Cable Matters DisplayPort to DisplayPort Cable",
+        productName: "Cable Matters DisplayPort",
         price: 15.99,
         description: "Reliable cable for connecting DisplayPort devices.",
     },
@@ -715,7 +715,7 @@ const listProducts = [
     {
         productCategory: "Others",
         productSubcategories: "Power Supplies",
-        productName: "be quiet! Straight Power 11 850W",
+        productName: "Straight Power 11 850W",
         price: 149.99,
         description: "850W modular power supply with 80+ Gold efficiency and low noise.",
     },
@@ -832,74 +832,106 @@ let shoppingCart = new ShoppingCart()
 let filtersContainer = document.getElementById("home_section_filter")
 filtersContainer.innerHTML += ""
 categoriesStore.forEach(category => {
-    filtersContainer.innerHTML += `<div class="form-check white_text"><label class="form-check-label" for="filter_applied_${category}"><input type="checkbox" class="form-check-input filter_category id="filter-applied-${category}" value="${category}">${category}</label></div>`
+    filtersContainer.innerHTML += `<div class="form-check white_text pl-4 pr-3 my-2"><input type="checkbox" class="form-check-input filter_category" id="filter-applied-${category}" value="${category}" data-categoria="${category}"><label class="form-check-label" for="filter_applied_${category}">${category}</label></div>`
 });
-const checkboxFilters = document.querySelectorAll("#home_section_filter .filter_category")
-checkboxFilters.forEach(checkbox => {
-    checkbox.addEventListener('change', filterProducts);
-});
-function filterProducts() {
-    const productsFilter = products;
-    const selectedFilters = obtainSelectedFilters();
-    const filteredProducts = productsFilter.filter(product => {
-        return selectedFilters.every(filter => product.productCategory.includes(filter));
+// const checkboxFilters = document.querySelectorAll(".filter_category")
+// checkboxFilters.forEach(checkbox => {
+//     checkbox.addEventListener('change', filterProducts);
+// });
+// function filterProducts() {
+//     const productsFilter = products;
+//     const selectedFilters = obtainSelectedFilters();
+//     const filteredProducts = productsFilter.filter(product => {
+//         return selectedFilters.every(filter => product.productCategory.includes(filter));
+//     });
+//     showProducts(filteredProducts);
+// }
+// function obtainSelectedFilters() {
+//     const filter = []
+//     checkboxFilters.forEach(checkbox => {
+//         if (checkbox.checked) {
+//             filters.push(checkbox.id);
+//         }
+//     });
+//     return filters;
+// }
+// function showProducts(filteredProducts) {
+//     const productsContainer = document.getElementById("home_section_products")
+//     productsContainer.innerHTML = ""
+//     if (filteredProducts.length > 0){
+//         filteredProducts.forEach(element => {
+//             const elementProduct = createElementProduct(element)
+//             productsContainer.appendChild(elementProduct)
+//         });
+//     }else{
+//         const message = document.createElement('p');
+//         message.textContent = 'There are no products with those filters.';
+//         message.classList.add("text-white")
+//         productsContainer.appendChild(message);
+//     }
+// }
+// function createElementProduct(product) {
+//     // Crea un elemento HTML para mostrar un producto, puedes personalizar esto
+//     const elementProduct = document.createElement("div");
+//     elementProduct.classList.add('shownProduct');
+//     elementProduct.innerHTML = `
+//         <h2 class="productName white_text text-center">${product.productName}</h2>
+//         <p class="white_text text-center">${product.price}</p>
+//         <button class="button_comprar white_text">BUY</button>`;
+//     return elementProduct;
+// }
+// const buttonsBuyProducts = document.querySelectorAll('.button_comprar');
+// console.log(buttonsBuyProducts)
+// buttonsBuyProducts.forEach(button => {
+//     button.addEventListener('click', () => {
+//         const productButton = obtainProductIndex(button);
+//         shoppingCart.addToCart(products[productButton]);
+//         console.log("producto añadido")
+//     });
+// });
+// function obtainProductIndex(button){
+//     const productContainer = button.closest('div');
+//     const h2Product = productContainer.querySelector('h2');
+//     const nameSearched = h2Product.textContent;
+//     const indexProduct = products.findIndex(product => product.productName === nameSearched)
+//     return indexProduct
+// }
+const checkboxes = document.querySelectorAll('.filter_category');
+const contenedorProductos = document.getElementById('home_section_products');
+const mensajeNoProductos = document.getElementById('mensaje-no-productos');
+// Función para mostrar productos basados en los checkboxes marcados
+function mostrarProductosFiltrados() {
+    // Obtener categorías seleccionadas
+    const categoriasSeleccionadas = Array.from(checkboxes)
+        .filter(checkbox => checkbox.checked)
+        .map(checkbox => checkbox.getAttribute('data-categoria'));
+    // Filtrar y mostrar los productos basados en las categorías seleccionadas
+    const productosFiltrados = products.filter(producto => {
+        return categoriasSeleccionadas.includes(producto.productCategory);
     });
-    showProducts(filteredProducts);
-}
-function obtainSelectedFilters() {
-    const filters = [];
-    checkboxFilters.forEach(checkbox => {
-        if (checkbox.checked) {
-            filters.push(checkbox.id);
-        }
-    });
-    return filters;
-}
-function showProducts(filteredProducts) {
-    const productsContainer = document.getElementById("home_section_products")
-    productsContainer.innerHTML = ""
-    if (filteredProducts.length > 0){
-        filteredProducts.forEach(element => {
-            const elementProduct = createElementProduct(element)
-            productsContainer.appendChild(elementProduct)
+    // Limpiar el contenedor de productos
+    contenedorProductos.innerHTML = '';
+    if (productosFiltrados.length === 0) {
+        // No hay productos para mostrar
+        mensajeNoProductos.style.display = 'block';
+    } else {
+        // Mostrar los productos filtrados en el contenedor
+        mensajeNoProductos.style.display = 'none';
+        productosFiltrados.forEach(product => {
+        contenedorProductos.innerHTML += `
+            <div class="product_container d-flex flex-column white_text text-center justify-content-around">
+                <h2 class="productNamet">${product.productName}</h2>
+                <div class="price_button_container d-flex justify-content-around vertical-align-center">
+                    <p class="d-flex align-content-center marginpadding0">USD$${product.price}</p>
+                    <button class="button_comprar white_text rounded-lg green-bordered font-weight-bold">BUY</button>
+                </div>
+            </div>`;
         });
-    }else{
-        const message = document.createElement('p');
-        message.textContent = 'No hay productos que coincidan con los filtros seleccionados.';
-        productsContainer.appendChild(message);
     }
 }
-function createElementProduct(product) {
-    // Crea un elemento HTML para mostrar un producto, puedes personalizar esto
-    const elementProduct = document.createElement('div');
-    elementProduct.classList.add('shownProduct');
-    elementProduct.innerHTML = `
-        <h2>${product.productName}</h2>
-        <p>${producto.precio}</p>
-        <button class="add_to_cart">BUY</button>
-    `;
-    return elementProduct;
-}
-const buttonsBuyProducts = document.querySelectorAll('.add_to_cart');
-buttonsBuyProducts.forEach(button => {
-    button.addEventListener('click', () => {
-        const product_button = obtainProductButton(button);
-        shoppingCart.productsCart.addToCart(product_button);
-        updateCartNumber(shoppingCart.productsCart.length);
-    });
+// Agregar evento de cambio a los checkboxes
+checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', mostrarProductosFiltrados);
 });
-function obtainProductButton(button){
-    const productId = button.getAttribute("productName")
-    products.forEach(element => {
-        
-    })
-}
-function updateCartNumber(number){
-
-}
-// filtersContainer.innerHTML += `<div class="black_designed_background font_bold white_text green_bordered">
-// <h3 class="text-center">Subcategories</h3>
-// </div>`
-// subcategoriesStore.forEach(subcategory => {
-//     filtersContainer.innerHTML += `<div class="form-check white_text"><label class="form-check-label"><input type="checkbox" class="form-check-input" value="${subcategory}">${subcategory}</label></div>`
-// });
+// Mostrar todos los productos al cargar la página
+mostrarProductosFiltrados();

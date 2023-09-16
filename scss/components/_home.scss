@@ -16,3 +16,27 @@
         width: 100px;
     }
 }
+.home_section_store{
+    #home_section_filter{
+    width: auto;
+    height: auto;
+    }
+    #home_section_products{
+        width: 90%;
+        .product_container{
+            width: 30%;
+            height: 150px;
+            border: 3px solid var(--color-primary);
+            .price_button_container{
+                p{
+                    width: 50%;
+                }
+                button{
+                    background-color: var(--color-primary);
+                    width: 20%;
+                    border: 3px solid var(--color-primary);
+                }
+            }
+        }
+    }
+}
