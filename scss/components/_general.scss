@@ -49,6 +49,9 @@ body{
 .bottom_bordered{
     border-bottom: 3px solid var(--color-contrast);
 }
+.lg_bottom_bordered{
+    border-bottom: 1px solid var(--color-contrast);
+}
 span{
     color: var(--color-primary)
 }
