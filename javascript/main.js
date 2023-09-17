@@ -772,7 +772,8 @@ const listProducts = [
 ]
 //Creation of class Product
 class Product {
-    constructor(productCategory,productSubcategories, productName, price, description) {
+    constructor(ID, productCategory,productSubcategories, productName, price, description) {
+        this.productID = ID
         this.productCategory = productCategory;
         this.productSubcategories = productSubcategories;
         this.productName = productName;
@@ -783,21 +784,13 @@ class Product {
     setNewPrice(newPrice){
         this.price = newPrice;
     }
-    //Method to remove a product from the cart
-    removeFromCart(){
-        let included = shoppingCart.includes(this)
-        if (included) {
-            shoppingCart.splice(shoppingCart.indexOf(this), 1);
-            alert("The product has been removed from your cart.")
-        }else{
-            alert("The product is not in your cart.");
-        }
-    }
 }
 //Adding the products for class Product
 const products = [];
+let i = 0
 for (let item in listProducts){
-    products.push(new Product(listProducts[item].productCategory, listProducts[item].productSubcategories, listProducts[item].productName, listProducts[item].price, listProducts[item].description));
+    products.push(new Product(i, listProducts[item].productCategory, listProducts[item].productSubcategories, listProducts[item].productName, listProducts[item].price, listProducts[item].description));
+    i ++
 }
 //Categories of products
 const categoriesStore = [
@@ -811,127 +804,89 @@ class ShoppingCart {
     constructor() {
         this.productsCart = [];
     }
-    //Method to add a product to the cart
-    addToCart(element){
-        this.productsCart.push(element);
+    //Method to add a product to the cart. Add the product to the cart based on the product if
+    addToCart(elementID){
+        const productToAdd = products[elementID];
+        if (productToAdd) {
+            
+            this.productsCart.push(productToAdd);
+        } else {
+            console.log(`El producto con el ID ${elementId} no existe.`); //Is to check the error, later I will add an sweetalert
+        }
     }
+    //Method to obtain a text resume of shopping cart objects, is to check some functions
     textMenuCart(){
         let i = 1
         let totalPriceCalculation = 0
         let shoppingCartMenu = `||  Products Cart  ||\n`
-        let showCart = this.productsCart.forEach( (element) =>{
+        this.productsCart.forEach( (element) =>{
             shoppingCartMenu += `${i}- [ ${element.productName}        $${element.price} ]\n`
-            i += 1
+            i ++
             totalPriceCalculation += Math.round(element.price)
         })
         shoppingCartMenu += `| Total price =  $${totalPriceCalculation} |`
         return shoppingCartMenu
     }
+    //Method to calculate the total amount of the shopping cart
+    calculateTotal(){
+        let totalPriceCalculation = 0
+        this.productsCart.forEach( (element) =>{
+            totalPriceCalculation += element.price
+        })
+        return Math.round(totalPriceCalculation)
+    }
 }
+//Create the shopping cart
 let shoppingCart = new ShoppingCart()
+
+//Code to the function of the buttons "buy" for the products
+function createEventBuyButtons(){
+    const botonesCompra = document.querySelectorAll(".button_buy");
+    botonesCompra.forEach(boton => {
+        boton.addEventListener("click", () => {
+            const productId = boton.parentElement.getAttribute("data-product-id");
+            shoppingCart.addToCart(productId);
+        });
+    });
+}
+
+//Code for the filters and products section
 let filtersContainer = document.getElementById("home_section_filter")
 filtersContainer.innerHTML += ""
 categoriesStore.forEach(category => {
     filtersContainer.innerHTML += `<div class="form-check white_text pl-4 pr-3 my-2"><input type="checkbox" class="form-check-input filter_category" id="filter-applied-${category}" value="${category}" data-categoria="${category}"><label class="form-check-label" for="filter_applied_${category}">${category}</label></div>`
 });
-// const checkboxFilters = document.querySelectorAll(".filter_category")
-// checkboxFilters.forEach(checkbox => {
-//     checkbox.addEventListener('change', filterProducts);
-// });
-// function filterProducts() {
-//     const productsFilter = products;
-//     const selectedFilters = obtainSelectedFilters();
-//     const filteredProducts = productsFilter.filter(product => {
-//         return selectedFilters.every(filter => product.productCategory.includes(filter));
-//     });
-//     showProducts(filteredProducts);
-// }
-// function obtainSelectedFilters() {
-//     const filter = []
-//     checkboxFilters.forEach(checkbox => {
-//         if (checkbox.checked) {
-//             filters.push(checkbox.id);
-//         }
-//     });
-//     return filters;
-// }
-// function showProducts(filteredProducts) {
-//     const productsContainer = document.getElementById("home_section_products")
-//     productsContainer.innerHTML = ""
-//     if (filteredProducts.length > 0){
-//         filteredProducts.forEach(element => {
-//             const elementProduct = createElementProduct(element)
-//             productsContainer.appendChild(elementProduct)
-//         });
-//     }else{
-//         const message = document.createElement('p');
-//         message.textContent = 'There are no products with those filters.';
-//         message.classList.add("text-white")
-//         productsContainer.appendChild(message);
-//     }
-// }
-// function createElementProduct(product) {
-//     // Crea un elemento HTML para mostrar un producto, puedes personalizar esto
-//     const elementProduct = document.createElement("div");
-//     elementProduct.classList.add('shownProduct');
-//     elementProduct.innerHTML = `
-//         <h2 class="productName white_text text-center">${product.productName}</h2>
-//         <p class="white_text text-center">${product.price}</p>
-//         <button class="button_comprar white_text">BUY</button>`;
-//     return elementProduct;
-// }
-// const buttonsBuyProducts = document.querySelectorAll('.button_comprar');
-// console.log(buttonsBuyProducts)
-// buttonsBuyProducts.forEach(button => {
-//     button.addEventListener('click', () => {
-//         const productButton = obtainProductIndex(button);
-//         shoppingCart.addToCart(products[productButton]);
-//         console.log("producto añadido")
-//     });
-// });
-// function obtainProductIndex(button){
-//     const productContainer = button.closest('div');
-//     const h2Product = productContainer.querySelector('h2');
-//     const nameSearched = h2Product.textContent;
-//     const indexProduct = products.findIndex(product => product.productName === nameSearched)
-//     return indexProduct
-// }
 const checkboxes = document.querySelectorAll('.filter_category');
 const contenedorProductos = document.getElementById('home_section_products');
 const mensajeNoProductos = document.getElementById('mensaje-no-productos');
-// Función para mostrar productos basados en los checkboxes marcados
+
 function mostrarProductosFiltrados() {
-    // Obtener categorías seleccionadas
     const categoriasSeleccionadas = Array.from(checkboxes)
         .filter(checkbox => checkbox.checked)
         .map(checkbox => checkbox.getAttribute('data-categoria'));
-    // Filtrar y mostrar los productos basados en las categorías seleccionadas
     const productosFiltrados = products.filter(producto => {
         return categoriasSeleccionadas.includes(producto.productCategory);
     });
-    // Limpiar el contenedor de productos
     contenedorProductos.innerHTML = '';
     if (productosFiltrados.length === 0) {
-        // No hay productos para mostrar
         mensajeNoProductos.style.display = 'block';
     } else {
-        // Mostrar los productos filtrados en el contenedor
         mensajeNoProductos.style.display = 'none';
         productosFiltrados.forEach(product => {
         contenedorProductos.innerHTML += `
             <div class="product_container d-flex flex-column white_text text-center justify-content-around">
                 <h2 class="productNamet">${product.productName}</h2>
-                <div class="price_button_container d-flex justify-content-around vertical-align-center">
+                <div class="price_button_container d-flex justify-content-around vertical-align-center" data-product-id="${product.productID}">
                     <p class="d-flex align-content-center marginpadding0">USD$${product.price}</p>
-                    <button class="button_comprar white_text rounded-lg green-bordered font-weight-bold">BUY</button>
+                    <button class="button_buy white_text rounded-lg green-bordered font-weight-bold">BUY</button>
                 </div>
             </div>`;
         });
     }
+    createEventBuyButtons() //Call the function of event for buttons to update everytime a filter is added
 }
-// Agregar evento de cambio a los checkboxes
+//Add event of change for the checkboxes
 checkboxes.forEach(checkbox => {
     checkbox.addEventListener('change', mostrarProductosFiltrados);
 });
-// Mostrar todos los productos al cargar la página
 mostrarProductosFiltrados();

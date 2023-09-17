@@ -1,3 +1,4 @@
+@charset "UTF-8";
 :root {
   --color-primary: #00B500;
   --color-contrast: #00FF00;
@@ -75,6 +76,26 @@ span {
 
 nav a img {
   width: 60px;
+}
+nav .nav-cart {
+  display: flex;
+}
+nav .nav-cart img {
+  width: 40px; /* Ajusta el tamaño de la imagen del carrito según tu diseño */
+  height: 40px;
+}
+nav .nav-cart .counter-cart {
+  position: absolute;
+  top: 0px; /* Ajusta la posición vertical según tu diseño */
+  right: -1px; /* Ajusta la posición horizontal según tu diseño */
+  background-color: var(--color-contrast); /* Color de fondo del círculo */
+  color: #fff; /* Color del texto del contador */
+  border-radius: 50%; /* Hace que el fondo sea un círculo */
+  width: 20px; /* Ajusta el tamaño del círculo según tu diseño */
+  height: 20px;
+  text-align: center;
+  font-size: 14px; /* Tamaño de fuente del contador */
+  line-height: 20px; /* Centra verticalmente el texto en el círculo */
 }
 
 header {
