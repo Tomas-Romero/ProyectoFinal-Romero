@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="images/uranium_logo/uranium-black-logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../images/uranium_logo/uranium-black-logo.png" type="image/x-icon">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +24,7 @@
         <div class="collapse navbar-collapse justify-content-around" id="navbarNav">
             <ul class="navbar-nav w-50">
                 <li class="color-animacion nav-item active"><a class="nav-link" href="../index.html">Home</a></li>
-                <li class="color-animacion nav-item"><a class="nav-link" href="../index.html/#home_store_tittle">Store</a></li>
+                <li class="color-animacion nav-item"><a class="nav-link" href="../index.html">Store</a></li>
                 <!-- <li class="color-animacion nav-item"><a class="nav-link" href="pages/about_us.html">About Us</a></li>
                 <li class="color-animacion nav-item"><a class="nav-link" href="pages/contact.html">Contact</a></li>
                 <li class="color-animacion nav-item"><a class="nav-link" href="pages/faq.html">FAQ</a></li> -->
@@ -38,26 +38,37 @@
             <div class="dropdown-menu menu-desplegable text-center green_bordered black_background white_text" aria-labelledby="carritoDropdown">
                 <h3 class="bottom_bordered">Your Cart</h3>
                 <div id="dropdown-menu-cart"></div>
-                <div>
-                    <button class="green_bordered font-weight-bold p-2">
-                        <a href="your_cart.html">Checkout</a>
-                    </button>
-                </div>
             </div>
         </div>
     </nav>
-    <header class="d-flex black_background white_text align-items-center justify-content-between bottom_bordered">
+    <header class="d-flex black_background white_text align-items-center justify-content-between bottom_bordered cart_header">
         <div class="header_div_text">
-            <h1 class="d-flex flex-wrap">Welcome to <span>Uranium Hardware</span></h1>
-            <p>Elevate Your <span>Tech</span> Experience With <span>Atomic</span> Power</p>
+            <h1 class="d-flex flex-wrap pl-5">Your Cart</h1>
         </div>
-        <img class="" src="../images/complementary/image 1.png" alt="Happy girl using a computer">
     </header>
-<main>
-</main>
-<footer>
-</footer>
-    <script src="../javascript/main.js"></script>
+    <main>
+        <section id="total_cart" class="d-flex black_background white_text py-5 pl-5">
+            <h2 class="green_text">Your total account is <span id="totalPrice">0.00</span></h2>
+        </section>
+        <section id="cart_products" class="black_background d-flex flex-column align-items-center">
+
+        </section>
+        <section id="subtotal_cart" class="black_background d-flex">
+            <div class="d-flex justify-content-between w-50">
+                <h3 >Subtotal</h3>
+                <span id="totalPriceSubtotal"></span>
+                <h3 class="">Local Taxes (15%)</h3>
+                <span id="totalPriceTaxes"></span>
+                <h3 class="">Your Total</h3>
+                <span id="totalPriceFinal"></span>
+            </div>
+        </section>
+    </main>
+    <footer>
+    </footer>
+    <script src="../javascript/products.js"></script>
+    <script src="../javascript/functions.js"></script>
+    <script src="../javascript/main_yourcart.js"></script>
     <!-- Asegúrate de incluir jQuery antes de este script-->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>

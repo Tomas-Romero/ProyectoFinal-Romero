@@ -543,7 +543,7 @@ const listProducts = [
     {
         productCategory: "Accessories",
         productSubcategories: "Cables",
-        productName: "Anker PowerLine+ USB-C to USB-A Cable",
+        productName: "Anker PowerLine+ USB-C",
         price: 12.99,
         description: "Durable USB-C cable for fast charging and data transfer.",
     },
@@ -557,7 +557,7 @@ const listProducts = [
     {
         productCategory: "Accessories",
         productSubcategories: "Cables",
-        productName: "Cable Matters DisplayPort to DisplayPort Cable",
+        productName: "Cable Matters DisplayPort",
         price: 15.99,
         description: "Reliable cable for connecting DisplayPort devices.",
     },
@@ -715,7 +715,7 @@ const listProducts = [
     {
         productCategory: "Others",
         productSubcategories: "Power Supplies",
-        productName: "be quiet! Straight Power 11 850W",
+        productName: "Straight Power 11 850W",
         price: 149.99,
         description: "850W modular power supply with 80+ Gold efficiency and low noise.",
     },
@@ -772,7 +772,8 @@ const listProducts = [
 ]
 //Creation of class Product
 class Product {
-    constructor(productCategory,productSubcategories, productName, price, description) {
+    constructor(ID, productCategory,productSubcategories, productName, price, description) {
+        this.productID = ID
         this.productCategory = productCategory;
         this.productSubcategories = productSubcategories;
         this.productName = productName;
@@ -783,21 +784,13 @@ class Product {
     setNewPrice(newPrice){
         this.price = newPrice;
     }
-    //Method to remove a product from the cart
-    removeFromCart(){
-        let included = shoppingCart.includes(this)
-        if (included) {
-            shoppingCart.splice(shoppingCart.indexOf(this), 1);
-            alert("The product has been removed from your cart.")
-        }else{
-            alert("The product is not in your cart.");
-        }
-    }
 }
 //Adding the products for class Product
 const products = [];
+let i = 0
 for (let item in listProducts){
-    products.push(new Product(listProducts[item].productCategory, listProducts[item].productSubcategories, listProducts[item].productName, listProducts[item].price, listProducts[item].description));
+    products.push(new Product(i, listProducts[item].productCategory, listProducts[item].productSubcategories, listProducts[item].productName, listProducts[item].price, listProducts[item].description));
+    i ++
 }
 //Categories of products
 const categoriesStore = [
@@ -807,141 +800,40 @@ const categoriesStore = [
 const subcategoriesStore = [
     "Intel", "Amd", "Nvidia Graphics Cards", "Amd Graphics Cards", "DDR4 RAM", "DDR3 RAM", "SSDs", "HDDs", "Intel Motherboards", "AMD Motherboards", "Gaming Monitors", "Professionals Monitors", "Keyboards", "Mouse", "Headsets", "Cables", "Mouse Pads", "Chairs", "Coolers", "Power Supplies", "Others"
 ]
-//Initial menu text
-const menuOptionsText = "Welcome to Uranium Hardware\nEnter the your option to"
-//State for the loop of the menu
-let finishedClient = "False"
-//Function to show the categories of the products and enter a category option
-function ShowCategories(){
-    let shownText = ""
-    let categoryOption = ""
-    let i = 1
-    categoriesStore.forEach( (category)=> {
-        shownText += `${i}- ${category}\n`;
-        i += 1
-    })
-    categoryOption = prompt(`Categories of Products\nEnter the category number to show the related products.\n${shownText}`)
-    try {
-        let categoryIntroducedOption = parseInt(categoryOption) //Try to parse the introduced value
-        if((categoryIntroducedOption >= 1) && (categoryIntroducedOption <= (categoriesStore.length))){ //Filter that the option is possible for the category array lenght
-            return(categoriesStore[categoryIntroducedOption - 1]) //Return the category name based on their index
-        }else{
-            alert("The introduced option is not an available option.");
-            ShowCategories()
-        }
-    } catch (error){
-        alert("The introduced option is not an available option.");
-        ShowCategories()
-    }
-}
-//Function to show the product of the entered category
-function ShowProducts(category){
-    let productsCategory = products.filter( (element) => element.productCategory.includes(category));
-    let productsSubcategory = new Set(productsCategory.map(element => element.productSubcategories));
-    let shownText = ""
-    let i = 0
-    productsSubcategory.forEach( (subcategory)=>{
-        let shownTextproducts = ""
-        productsCategory.forEach( (element)=>{
-            if (element.productSubcategories == subcategory){
-                i += 1; 
-                shownTextproducts += `${i}- [ ${element.productName}        $${element.price} ]\n      [" ${element.description} "]\n\n`
-            }   
-        })
-        shownText += `||  ${subcategory}  ||\n\n${shownTextproducts}`
-    })
-    console.log(shownText)
-    let option = prompt(`${shownText}\nEnter the number of the product to add.\nEnter "0" to go back:`)
-    try {
-        let productIntroducedOption = parseInt(option) //Try to parse the introduced value
-        if((productIntroducedOption >= 1) && (productIntroducedOption <= (productsCategory.length))){ //Filter that the option is possible for the product array lenght
-            shoppingCart.addToCart(productsCategory[productIntroducedOption - 1])
-            alert(`The product "${productsCategory[productIntroducedOption - 1].productName}" was added to the shopping cart successfully`)        
-        }else if (productIntroducedOption == 0){
-        }else{
-            alert("The introduced option is not an available option.");
-        }
-    } catch (error){
-        alert("The introduced option is not an available option.");
-    }
-    // if (option <= (productsCategory.length + 1) && option >= 1){
-    //     shoppingCart.addToCart(productsCategory[option])
-    //     alert(`The product "${productsCategory[option].productName}" was added to the shopping cart successfully`)
-    // }else if (option == 0 || option == "back"){
-    //     showMenuOptions()
-}
 class ShoppingCart {
     constructor() {
         this.productsCart = [];
     }
-    //Method to add a product to the cart
-    addToCart(element){
-        this.productsCart.push(element);
+    //Method to add a product to the cart. Add the product to the cart based on the product if
+    addToCart(elementID){
+        const productToAdd = products[elementID];
+        if (productToAdd) {
+            this.productsCart.push(productToAdd);
+            guardarCarrito(shoppingCart)
+        } else {
+            console.log(`El producto con el ID ${elementID} no existe.`); //Is to check the error, later I will add an sweetalert
+        }
     }
+    //Method to obtain a text resume of shopping cart objects, is to check some functions
     textMenuCart(){
         let i = 1
         let totalPriceCalculation = 0
         let shoppingCartMenu = `||  Products Cart  ||\n`
-        let showCart = this.productsCart.forEach( (element) =>{
+        this.productsCart.forEach( (element) =>{
             shoppingCartMenu += `${i}- [ ${element.productName}        $${element.price} ]\n`
-            i += 1
+            i ++
             totalPriceCalculation += Math.round(element.price)
         })
         shoppingCartMenu += `| Total price =  $${totalPriceCalculation} |`
         return shoppingCartMenu
     }
+    //Method to calculate the total amount of the shopping cart
     calculateTotal(){
         let totalPriceCalculation = 0
-        let showCart = this.productsCart.forEach( (element) =>{
+        this.productsCart.forEach( (element) =>{
             totalPriceCalculation += element.price
         })
         return Math.round(totalPriceCalculation)
     }
-    applyCupon(){
-        let cupon = prompt("Do you have a discount coupon? Apply your discount coupon, if you don't have enter '0'")
-        let totalPrice = shoppingCart.calculateTotal()
-        while (cupon != "cupon" || cupon != 0)
-            if (cupon == "cupon"){
-                totalPrice = totalPrice * 0.8
-                alert(`The purchase of the products has been successful for $${totalPrice}`)
-                finishedClient = "True"
-                break
-            }else if (cupon == 0){
-                alert(`The purchase of the products has been successful for $${totalPrice}`)
-                finishedClient = "True"
-                break
-            }else{
-                alert("That isn't a available cupon")
-                cupon = prompt("Do you have a discount coupon? Apply your discount coupon, if you don't have enter '0'")
-
-            }    
-    }
 }
 let shoppingCart = new ShoppingCart()
-const options = "Enter the numbered option to continue:\n1. Show the products of the store\n2. Show the information of the store\n3. Show your shopping cart\n4. Close the menu"
-//Function for the menu loop and uses of the functions
-function showMenuOptions(){
-    optionsMenu = parseInt(prompt(options))
-    if (optionsMenu == 1){
-        let selectedCategory = ShowCategories()
-        ShowProducts(selectedCategory)
-    }else if (optionsMenu == 2){
-        alert(" ||  Schedules  ||\nMonday/Friday: 12:00 - 23:00 \nSaturday/Sunday: 19:00 - 23:00\n  ||  Location  ||\nAv. Urquiza 314 - San Rafael, Mendoza, Argentina")
-    }else if(optionsMenu == 3){
-        if ((shoppingCart.productsCart).length >= 1){
-            let continueBuying = prompt(`${shoppingCart.textMenuCart()}\n\nEnter "1" to buy the cart or any else to go back.`)
-            if (continueBuying == 1){
-                shoppingCart.applyCupon()}
-        }else{
-            alert("Your shopping cart is empty")
-        }
-    }else if(optionsMenu == 4){
-        finishedClient = "True"
-    }else{
-        alert("The introduced option is not an available option")
-    }
-}
-// while (finishedClient == "False"){
-//     showMenuOptions();
-// }
-// alert("All the process was successful")

@@ -55,3 +55,28 @@ body{
 span{
     color: var(--color-primary)
 }
+#cart_products{
+    gap: 20px;
+    .product{
+        background-image: url(../../images/background/white-designed.webp);
+        background-size: cover;
+        width: 80%;
+        border: 3px solid var(--color-contrast);
+        padding: 10px;
+        font-weight: 700;
+        h3{
+            color: black;
+        }
+        p{
+            color: black;
+        }
+        button{
+            width: 10%;
+            background-color: red;
+            border: 3px solid black;
+        }
+    }
+}
+.hidden{
+    display: none!important;
+}
