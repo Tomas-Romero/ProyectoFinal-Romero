@@ -9,6 +9,17 @@ function createEventBuyButtons(){
             counterCart.textContent = shoppingCart.productsCart.length.toString()
             actualizarMenuDesplegable(shoppingCart);
         });
+        boton.addEventListener('click', () => {
+            Toastify({
+                text: "The product was added to your cart!",
+                duration: 3000,
+                gravity: 'top',
+                position: 'right',
+                style: {
+                    background: "linear-gradient(to right, black, green)",
+                },
+            }).showToast();
+        })  
     });
 }
 //Code for the filters and products section

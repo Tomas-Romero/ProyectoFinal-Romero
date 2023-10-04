@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/styles.css">
     <title>Your Cart | Uranium Hardware</title>
@@ -53,7 +54,7 @@
         <section id="cart_products" class="black_background d-flex flex-column align-items-center">
 
         </section>
-        <section id="subtotal_cart" class="black_background d-flex">
+        <section id="subtotal_cart" class="subtotal_cart black_background d-flex white_text font-weight-bold">
             <div class="d-flex justify-content-between w-50">
                 <h3 >Subtotal</h3>
                 <span id="totalPriceSubtotal"></span>
@@ -62,10 +63,15 @@
                 <h3 class="">Your Total</h3>
                 <span id="totalPriceFinal"></span>
             </div>
+            <button id="button-buy-cart" class="green_bordered font-weight-bold p-2">
+                <p>BUY</p>
+            </button>
         </section>
     </main>
     <footer>
     </footer>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../javascript/products.js"></script>
     <script src="../javascript/functions.js"></script>
     <script src="../javascript/main_yourcart.js"></script>

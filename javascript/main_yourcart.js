@@ -61,6 +61,17 @@ function actualizarProductosEnCarrito() {
                 shoppingCart2.productsCart.splice(index, 1);
                 actualizarProductosEnCarrito();
             });
+            deleteButton.addEventListener('click', () => {
+                Toastify({
+                    text: "The product was removed from your cart!",
+                    duration: 3000,
+                    gravity: 'top',
+                    position: 'right',
+                    style: {
+                        background: "linear-gradient(to right, black, red)",
+                    },
+                }).showToast();
+            })  
             productDiv.appendChild(productName);
             productDiv.appendChild(description);
             productDiv.appendChild(price);
@@ -72,3 +83,12 @@ function actualizarProductosEnCarrito() {
     actualizarSubtotalTiempoReal()    }
 }
 actualizarProductosEnCarrito();
+buttonBuyCart = document.getElementById("button-buy-cart")
+buttonBuyCart.addEventListener('click', () => {
+    Swal.fire({
+        title: 'Thanks!',
+        text: 'You buy the products succesfully!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+})
+})
